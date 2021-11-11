@@ -8,7 +8,7 @@ const asBoolean = (v) => 'true' == String(v);
 
 const daysBetween = (startDate, endDate = new Date()) => Math.floor((endDate.getTime() - startDate.getTime()) / MS_IN_DAY);
 
-const versionFilter = ({olderThan, untagged, tagRegex}) => (version) => {
+const versionFilter = ({olderThan, untagged, tagRegex, tagRegexExclude}) => (version) => {
   const createdAt = new Date(version.created_at);
   const age = daysBetween(createdAt);
 
@@ -23,6 +23,9 @@ const versionFilter = ({olderThan, untagged, tagRegex}) => (version) => {
   }
 
   if (tagRegex && tags && tags.some((tag) => tag.match(tagRegex))) {
+    if(tagRegexExclude) {
+      return tags.every((tag) => !tag.match(tagRegexExclude));
+    }
     return true;
   }
 
@@ -102,6 +105,7 @@ const run = async () => {
     const keepLast = Number(core.getInput('keep-last'));
     const untagged = asBoolean(core.getInput('untagged'));
     const tagRegex = core.getInput('tag-regex');
+    const tagRegexExclude = core.getInput('tag-regex-exclude');
 
     const octokit = github.getOctokit(token);
 
@@ -114,7 +118,7 @@ const run = async () => {
       listVersions = listUserContainerVersions(octokit)(container);
       pruneVersion = dryRun ? dryRunDelete : deleteUserContainerVersion(octokit)(container);
     }
-    const filterVersion = versionFilter({olderThan, untagged, tagRegex});
+    const filterVersion = versionFilter({olderThan, untagged, tagRegex, tagRegexExclude});
 
     const pruningList = await getPruningList(listVersions, filterVersion)(keepLast);
 
