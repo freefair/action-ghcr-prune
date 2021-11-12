@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const {getPruningList} = require('./src/pruning');
 
-const MS_IN_DAY = 1000 * 60 * 60 * 24;
+const MS_IN_DAY = 86_400_000; // 86400 sec / p. d.
 
 const asBoolean = (v) => 'true' == String(v);
 
@@ -28,9 +28,8 @@ const versionFilter = ({olderThan, untagged, tagRegex, tagRegexExclude}) => (ver
         return tags.every((tag) => !tag.match(tagRegexExclude));
       }
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
   return tags && tags.length;
