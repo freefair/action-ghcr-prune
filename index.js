@@ -22,14 +22,18 @@ const versionFilter = ({olderThan, untagged, tagRegex, tagRegexExclude}) => (ver
     return true;
   }
 
-  if (tagRegex && tags && tags.some((tag) => tag.match(tagRegex))) {
-    if(tagRegexExclude) {
-      return tags.every((tag) => !tag.match(tagRegexExclude));
+  if (tagRegex && tags) {
+    if(tags.some((tag) => tag.match(tagRegex))) {
+      if(tagRegexExclude) {
+        return tags.every((tag) => !tag.match(tagRegexExclude));
+      }
+      return true;
+    } else {
+      return false;
     }
-    return true;
   }
 
-  return false;
+  return tags && tags.length;
 };
 
 const versionSummary = (version) => ({
