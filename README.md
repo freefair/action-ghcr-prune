@@ -73,6 +73,10 @@ As this action is destructive, it's recommended to test any changes to the confi
 
 :warning: **Please note:** Extra care should be taken when using `tag-regex`, please make sure you've read the [Word of caution](#word-of-caution)
 
+### tag-regex-exclude
+
+**Optional** Regular expression which will be evaluated against all tags of a version. Any version with at least one tag matching the expression will be ignored. Disabled by defaults.
+
 ## Outputs
 
 ### count
