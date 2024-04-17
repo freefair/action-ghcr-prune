@@ -72,7 +72,7 @@ const run = async () => {
 
     const filterOptions = {
       keepTags: core.getMultilineInput('keep-tags'),
-      keepTagsRegexes: core.getInput('keep-tags-regexes') ? core.getMultilineInput('keep-tags-regexes') : [core.getInput('tag-regex-exclude')],
+      keepTagsRegexes: core.getInput('keep-tags-regexes') ? core.getMultilineInput('keep-tags-regexes') : (core.getInput('tag-regex-exclude') ? [core.getInput('tag-regex-exclude')] : null),
       keepYoungerThan: Number(core.getInput('keep-younger-than')) || Number(core.getInput('older-than')),
       pruneTagsRegexes: core.getInput('prune-tags-regexes') ? core.getMultilineInput('prune-tags-regexes') : legacyTagRegex,
       pruneUntagged: asBoolean(core.getInput('prune-untagged')) || asBoolean(core.getInput('untagged')),
