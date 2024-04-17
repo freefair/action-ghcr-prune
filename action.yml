@@ -41,6 +41,12 @@ inputs:
       Each expression will be evaluated against all tags of a version.
       Any version with at least one tag matching the expression will be excluded from pruning.
     required: false
+  tag-regex-exclude:
+    description: |
+      Regular expression for tags to exclude from pruning, one per line.
+      Any version with at least one tag matching the expression will be excluded from pruning.
+    deprecationMessage: Replaced by input `keep-tags-regexes`.
+    required: false
   keep-younger-than:
     description: 'Minimum age in days of container versions that will be pruned'
     required: false

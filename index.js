@@ -8,8 +8,8 @@ const {
   listOrgContainerVersions,
   listUserContainerVersions,
 } = require('./src/octokit');
-const {getPruningList, prune} = require('./src/pruning');
-const {versionFilter} = require('./src/version-filter');
+const { getPruningList, prune } = require('./src/pruning');
+const { versionFilter } = require('./src/version-filter');
 
 const asBoolean = (v) => 'true' == String(v);
 
@@ -37,17 +37,17 @@ const writeSummary = async (container, dryRun, pruningVersions, prunedVersions) 
   }
 
   await summary.addHeading('Pruned versions', 3)
-               .addRaw(`The following ${prunedVersions.length} versions were successfully pruned:`)
-               .addTable([
-                  [{data: 'ID', header: true}, {data: 'Name', header: true}, {data: 'Created at', header: true}, {data: 'Tags', header: true}],
-                  ...prunedVersions.map((version) => ([
-                    String(version.id),
-                    version.name,
-                    version.created_at.replace('T', ' '),
-                    version.metadata.container.tags.join(', '),
-                  ])),
-                ])
-                .write();
+    .addRaw(`The following ${prunedVersions.length} versions were successfully pruned:`)
+    .addTable([
+      [{ data: 'ID', header: true }, { data: 'Name', header: true }, { data: 'Created at', header: true }, { data: 'Tags', header: true }],
+      ...prunedVersions.map((version) => ([
+        String(version.id),
+        version.name,
+        version.created_at.replace('T', ' '),
+        version.metadata.container.tags.join(', '),
+      ])),
+    ])
+    .write();
 };
 
 const run = async () => {
@@ -72,7 +72,7 @@ const run = async () => {
 
     const filterOptions = {
       keepTags: core.getMultilineInput('keep-tags'),
-      keepTagsRegexes: core.getMultilineInput('keep-tags-regexes'),
+      keepTagsRegexes: core.getInput('keep-tags-regexes') ? core.getMultilineInput('keep-tags-regexes') : [core.getInput('tag-regex-exclude')],
       keepYoungerThan: Number(core.getInput('keep-younger-than')) || Number(core.getInput('older-than')),
       pruneTagsRegexes: core.getInput('prune-tags-regexes') ? core.getMultilineInput('prune-tags-regexes') : legacyTagRegex,
       pruneUntagged: asBoolean(core.getInput('prune-untagged')) || asBoolean(core.getInput('untagged')),
